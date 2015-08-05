@@ -1,0 +1,27 @@
+# Managed by saltstack
+{% set settings = salt['pillar.get']('zabbix-agent', {}) -%}
+{% if salt['grains.get']('os_family') != 'Windows' -%}
+PidFile={{ settings.get('pidfile', '/var/run/zabbix/zabbix_agentd.pid') }}
+{%- endif %}
+{% if settings.get('logfile', '/var/log/zabbix/zabbix_agentd.log') !=
+       "syslog" -%}
+LogFile={{ settings.get('logfile', '/var/log/zabbix/zabbix_agentd.log') }}
+{%- endif %}
+LogFileSize=10
+Server={{ settings.get('server', 'localhost') }}
+ListenPort={{ settings.get('listenport', '10050') }}
+{% if settings.get('listenip', false) -%}
+ListenIP={{ settings.get('listenip') }}
+{%- endif %}
+ServerActive={{ settings.get('serveractive', '') }}
+Hostname={{ settings.get('hostname', salt['grains.get']('id')) }}
+{% if settings.get('hostmetadata', false) -%}
+HostMetadata={{ settings.get('hostmetadata') }}
+{%- endif %}
+{% if settings.get('include', false) -%}
+Include={{ settings.get('include') }}
+{%- endif %}
+{% for userparameter in settings.get('userparameters', []) -%}
+UserParameter={{ userparameter }}
+{% endfor -%}
+{{ settings.get('extra_conf','') }}

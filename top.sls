@@ -4,3 +4,9 @@ base:
     - common.resolvconf
     - common.hosts
     - common.vimrc
+    - zabbix.agent.repo
+  '*':
+    - zabbix.agent.conf
+
+  'filial13':
+    - clone
